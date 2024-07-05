@@ -13,7 +13,7 @@ jobs:
     - name: Checkout repository content
       uses: actions/checkout@v3
 
-    - name: Check if Jekyll structure exists and set up if needed
+    - name: Set up Jekyll structure
       run: |
         if [ ! -d "docs" ]; then
           echo "Setting up Jekyll structure..."
@@ -22,28 +22,26 @@ jobs:
           echo "gems: [jekyll-paginate]" >> docs/_config.yml
           echo "permalink: /:title" >> docs/_config.yml
           echo "Jekyll structure set up."
-          
-          # Commit the changes back to main branch
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add docs/_config.yml
-          git commit -m "Set up Jekyll structure for GitHub Pages"
-          git push
         elif [ ! -f "docs/_config.yml" ]; then
           echo "Setting up _config.yml..."
           echo "theme: minima" > docs/_config.yml
           echo "gems: [jekyll-paginate]" >> docs/_config.yml
           echo "permalink: /:title" >> docs/_config.yml
           echo "_config.yml created."
-          
-          # Commit the changes back to main branch
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add docs/_config.yml
-          git commit -m "Create _config.yml for GitHub Pages"
-          git push
         else
           echo "Jekyll structure and _config.yml already exist."
+        fi
+
+    - name: Commit and push Jekyll setup changes
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Set up Jekyll structure and _config.yml"
+          git push origin main  # Assuming main is your default branch
+        else
+          echo "No changes to commit."
         fi
 
     - name: Create a new post if .doc file updated
@@ -76,3 +74,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs
+        cname: your-custom-domain.com  # Optional: Add custom domain if applicable
