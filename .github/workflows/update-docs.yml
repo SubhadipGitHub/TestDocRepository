@@ -16,7 +16,7 @@ jobs:
     - name: Copy .doc files to GitHub Pages
       run: |
         mkdir -p public/rice-object
-        cp **/*.doc public/rice-object/
+        find . -name '*.doc' -exec cp {} public/rice-object/ \;
 
     - name: Create a new post
       run: |
@@ -34,7 +34,7 @@ jobs:
         echo "Commit message: $COMMIT_MESSAGE" >> $POST_FILENAME
         echo "Updated .doc files have been copied to the GitHub Pages site." >> $POST_FILENAME
         echo "Content added or updated:" >> $POST_FILENAME
-        find **/*.doc >> $POST_FILENAME
+        find . -name '*.doc' >> $POST_FILENAME
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
