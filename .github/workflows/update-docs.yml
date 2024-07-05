@@ -13,17 +13,23 @@ jobs:
     - name: Checkout repository content
       uses: actions/checkout@v3
 
-    - name: Check if Jekyll structure exists
+    - name: Check if Jekyll structure exists and set up if needed
       run: |
-        if [ ! -d "docs" ] || [ ! -f "_config.yml" ]; then
+        if [ ! -d "docs" ]; then
           echo "Setting up Jekyll structure..."
-          mkdir -p docs
+          mkdir -p docs/_posts
           echo "theme: minima" > docs/_config.yml
           echo "gems: [jekyll-paginate]" >> docs/_config.yml
           echo "permalink: /:title" >> docs/_config.yml
           echo "Jekyll structure set up."
+        elif [ ! -f "docs/_config.yml" ]; then
+          echo "Setting up _config.yml..."
+          echo "theme: minima" > docs/_config.yml
+          echo "gems: [jekyll-paginate]" >> docs/_config.yml
+          echo "permalink: /:title" >> docs/_config.yml
+          echo "_config.yml created."
         else
-          echo "Jekyll structure already exists."
+          echo "Jekyll structure and _config.yml already exist."
         fi
 
     - name: Create a new post if .doc file updated
