@@ -20,11 +20,12 @@ jobs:
 
     - name: Create a new post
       run: |
+        mkdir -p public/_posts
         COMMIT_HASH=$(git rev-parse HEAD)
         COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')
         COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
         COMMIT_DATE=$(date -u)
-        POST_FILENAME="_posts/$(date +%Y-%m-%d)-update.md"
+        POST_FILENAME="public/_posts/$(date +%Y-%m-%d)-update.md"
         echo "---" > $POST_FILENAME
         echo "title: Update on $(date +'%Y-%m-%d %H:%M:%S %Z')" >> $POST_FILENAME
         echo "author: $COMMIT_AUTHOR" >> $POST_FILENAME
